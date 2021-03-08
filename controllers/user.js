@@ -26,7 +26,6 @@ exports.signin = (req, res) => {
   const payload = {
     id: user.id,
     username: user.username,
-
     exp: Date.now() + JWT_EXPIRATION_MS,
     // 900000 is 15 minutes
   };

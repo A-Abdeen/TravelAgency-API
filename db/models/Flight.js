@@ -16,6 +16,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.DATE,
       allowNull: false,
     },
+    //////////////////////////////////////// Location module
     departureAirport: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -24,6 +25,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
+    /////////////////////////////////////
     economySeats: {
       type: DataTypes.INTEGER,
       allowNull: false,

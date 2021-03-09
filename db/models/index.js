@@ -52,10 +52,14 @@ db.Booking.belongsToMany(db.Flight, {
 });
 
 //ONE TO MANY (LOCATION - FLIGHT)
-db.Location.hasMany(db.Flight);
+db.Location.hasMany(db.Flight, {
+  foreignKey: "departureId",
+  as: "fromLocation",
+});
 db.Flight.belongsTo(db.Location, {
   as: "fromLocation",
 });
+
 db.Flight.belongsTo(db.Location, {
   as: "toLocation",
 });

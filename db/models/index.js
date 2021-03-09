@@ -69,14 +69,15 @@ db.Airline.hasMany(db.Flight, {
   foreignKey: { fieldName: "airlineId" },
 });
 db.Flight.belongsTo(db.Airline, {
+  as: "airline",
   foreignKey: "airlineId",
 });
 // ONE TO ONE
 db.User.hasOne(db.Airline, {
-  foreignKey: "userId",
+  foreignKey: "adminId",
   as: "airline",
 });
-db.Airline.belongsTo(db.User, { as: "user" });
+db.Airline.belongsTo(db.User, { as: "admin" });
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;

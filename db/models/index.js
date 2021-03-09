@@ -60,13 +60,19 @@ db.Flight.belongsTo(db.Location, {
   as: "toLocation",
 });
 //////////////////////////////////////
-db.User.hasMany(db.Flight, {
-  as: "airline",
+db.Airline.hasMany(db.Flight, {
+  as: "flights",
   foreignKey: { fieldName: "airlineId" },
 });
-db.Flight.belongsTo(db.User, {
-  as: "test",
+db.Flight.belongsTo(db.Airline, {
+  foreignKey: "airlineId",
 });
+// ONE TO ONE
+db.User.hasOne(db.Airline, {
+  foreignKey: "userId",
+  as: "airline",
+});
+db.Airline.belongsTo(db.User, { as: "user" });
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;

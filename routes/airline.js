@@ -1,15 +1,12 @@
 const express = require("express");
-const {
-  airlineAdd,
-  flightAdd,
-  fetchAirline,
-} = require("../controllers/airline");
+const controller = require("../controllers/airline");
 const passport = require("passport");
 const router = express.Router();
 
-// // ROUTE PARAM
+//-------------------FETCH/PARAM
+
 router.param("airlineId", async (req, res, next, airlineId) => {
-  const foundAirline = await fetchAirline(airlineId, next);
+  const foundAirline = await controller.fetchAirline(airlineId, next);
   if (foundAirline) {
     req.airline = foundAirline;
     next();
@@ -21,14 +18,32 @@ router.param("airlineId", async (req, res, next, airlineId) => {
   }
 });
 
-// ADD AIRLINE------------------------------------
-router.post("/", passport.authenticate("jwt", { session: false }), airlineAdd);
+//-------------------LIST
 
-// ADD FLIGHT------------------------------------
+router.get("/", controller.airlineList);
+
+//-------------------ADD
+
+router.post(
+  "/",
+  passport.authenticate("jwt", { session: false }),
+  controller.airlineAdd
+);
+
+//-------------------ADD (FLIGHT)
+
 router.post(
   "/:airlineId/flights",
   // passport.authenticate("jwt", { session: false }),
-  flightAdd
+  controller.flightAdd
 );
+
+//-------------------UPDATE
+
+router.put("/:airlineId", controller.airlineUpdate);
+
+//-------------------DALETE
+
+router.delete("/:airlineId", controller.airlineDelete);
 
 module.exports = router;

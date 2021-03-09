@@ -1,6 +1,7 @@
-const { Airline, Flight, Location } = require("../db/models");
+const { Airline, Flight, User } = require("../db/models");
 
-// FETCH--------------------------------------
+//-------------------FETCH/PARAM
+
 exports.fetchAirline = async (airlineId, next) => {
   try {
     const foundAirline = await Airline.findByPk(airlineId);
@@ -10,24 +11,50 @@ exports.fetchAirline = async (airlineId, next) => {
   }
 };
 
-// ADD AIRLINE------------------------------------
-exports.airlineAdd = async (req, res, next) => {
+//-------------------LIST
+
+exports.airlineList = async (req, res, next) => {
   try {
-    console.log(req.body);
-    req.body.userId = req.user.id;
-    const newAirline = await Airline.create(req.body);
-    res.status(201).json(newAirline);
-  } catch (error) {
-    next(error);
+    const airlines = await Airline.findAll({
+      attributes: { exclude: ["createdAt", "updatedAt"] },
+      include: [
+        {
+          model: Flight,
+          as: "flights",
+          attributes: { exclude: ["createdAt", "updatedAt"] },
+        },
+        {
+          model: User,
+          as: "admin",
+          attributes: { exclude: ["createdAt", "updatedAt"] },
+        },
+      ],
+    });
+    res.json(airlines);
+  } catch (err) {
+    next(err);
   }
 };
 
-// ADD FLIGHT------------------------------------
+//-------------------ADD
+
+exports.airlineAdd = async (req, res, next) => {
+  try {
+    // alias of request  --- model format
+    req.body.adminId = req.user.id;
+    const newAirline = await Airline.create(req.body);
+    res.status(201).json(newAirline);
+  } catch (err) {
+    next(err);
+  }
+};
+
+//-------------------ADD (FLIGHT)
+
 exports.flightAdd = async (req, res, next) => {
   try {
-    // if (req.user.id === req.airline.userId)
-    console.log(req.body);
-    req.body.airlineId = req.airline.id;
+    if (req.user.id === req.airline.adminId)
+      req.body.airlineId = req.airline.id;
 
     const newFlight = await Flight.create(req.body);
     res.status(201).json(newFlight);
@@ -35,6 +62,30 @@ exports.flightAdd = async (req, res, next) => {
     // const err = new Error("Unauthorized");
     // err.status = 401;
     // next(err);
+  } catch (err) {
+    next(err);
+  }
+};
+
+//-------------------UPDATE
+
+exports.airlineUpdate = async (req, res, next) => {
+  try {
+    if (req.user.id === req.airline.adminId) {
+      // if (req.file);
+      await req.airline.update(req.body);
+      res.status(200).json(req.airline);
+    }
+  } catch (err) {
+    next(err);
+  }
+};
+
+//-------------------DELETE
+exports.airlineDelete = async (req, res, next) => {
+  try {
+    if (req.user.id === req.airline.adminId) await req.airline.destroy();
+    res.status(204).end();
   } catch (err) {
     next(err);
   }

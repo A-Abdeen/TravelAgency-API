@@ -1,4 +1,6 @@
-const { Flight } = require("../db/models");
+const { Flight, Airline } = require("../db/models");
+
+//-------------------FETCHING
 
 exports.fetchFlight = async (flightId, next) => {
   try {
@@ -10,24 +12,56 @@ exports.fetchFlight = async (flightId, next) => {
   }
 };
 
+//-------------------LIST
+
 exports.flightList = async (req, res, next) => {
-  console.log(req.body);
   try {
     const flights = await Flight.findAll({
-      attributes: req.body,
-      include: { model: Flight, as: "flights", attributes: ["id"] },
+      attributes: { exclude: ["createdAt", "updatedAt"] },
+      include: {
+        model: Airline,
+        as: "airline",
+        attributes: { exclude: ["createdAt", "updatedAt"] },
+      },
     });
     res.status(200).json(flights);
-  } catch (error) {
-    next(error);
+  } catch (err) {
+    next(err);
   }
 };
 
+//-------------------UPDATE
+
 exports.flightUpdate = async (req, res, next) => {
   try {
-    await req.flight.update(req.body);
-    res.status(204).end();
-  } catch (error) {
-    next(error);
+    if (req.flight.id === req.airline.userId) {
+      {
+        await req.flight.update(req.body);
+        res.status(200).json(req.flight);
+      }
+    } else {
+      const err = new Error("Unauthorized");
+      err.status = 401;
+      next(err);
+    }
+  } catch (err) {
+    next(err);
+  }
+};
+
+//-------------------DELETE
+
+exports.flightDelete = async (req, res, next) => {
+  try {
+    if (req.user.id === req.airline.userId) {
+      await req.flight.destroy();
+      res.status(204).end();
+    } else {
+      const err = new Error("Unauthorized");
+      err.status = 401;
+      next(err);
+    }
+  } catch (err) {
+    next(err);
   }
 };

@@ -3,19 +3,38 @@ const passport = require("passport");
 const controller = require("../controllers/flight");
 const router = express.Router();
 
+//-------------------FETCH/PARAM
 router.param("flightId", async (req, res, next, flightId) => {
   const flightFound = await controller.fetchFlight(flightId, next);
   if (flightFound) {
     req.flight = flightFound;
     next();
   } else {
-    const error = new Error("Flight Not Found");
-    error.status = 404;
-    next(error);
+    next({
+      status: 404,
+      message: "Flight not found",
+    });
   }
 });
 
-router.get("", controller.flightList);
-router.put("/:flightId", controller.flightUpdate);
+//-------------------LIST
+
+router.get("/", controller.flightList);
+
+//-------------------UPDATE
+
+router.put(
+  "/:flightId",
+  // passport.authenticate("jwt", { session: false }),
+  controller.flightUpdate
+);
+
+//-------------------DELETE
+
+router.delete(
+  "/:flightId",
+  // passport.authenticate("jwt", { session: false }),
+  controller.flightDelete
+);
 
 module.exports = router;

@@ -3,6 +3,7 @@ const express = require("express");
 const userRoutes = require("./routes/user");
 const airlineRoutes = require("./routes/airline");
 const flightRoutes = require("./routes/flight");
+const locationRoutes = require("./routes/location");
 
 const { localStrategy, jwtStrategy } = require("./middleware/passport");
 
@@ -24,6 +25,8 @@ passport.use(jwtStrategy);
 app.use(userRoutes); // ADD ROUTE IF NEEDED
 app.use("/airlines", airlineRoutes);
 app.use("/flights", flightRoutes);
+app.use("/", locationRoutes);
+
 db.sequelize.sync({ alter: true });
 
 app.listen(8000, () => {

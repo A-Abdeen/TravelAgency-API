@@ -16,13 +16,11 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-// Passport Setup
 app.use(passport.initialize());
 passport.use(localStrategy);
 passport.use(jwtStrategy);
 
-//userRoutes
-app.use(userRoutes); // ADD ROUTE IF NEEDED
+app.use(userRoutes);
 app.use("/airlines", airlineRoutes);
 app.use("/flights", flightRoutes);
 app.use("/", locationRoutes);

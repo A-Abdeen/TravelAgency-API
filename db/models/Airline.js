@@ -1,5 +1,3 @@
-// const SequelizeSlugify = require("sequelize-slugify");
-
 module.exports = (sequelize, DataTypes) => {
   const Airline = sequelize.define("Airline", {
     name: {
@@ -10,8 +8,6 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
     },
   });
-  // SequelizeSlugify.slugifyModel(Airline, {
-  //   source: ["name"],
-  // });
+
   return Airline;
 };

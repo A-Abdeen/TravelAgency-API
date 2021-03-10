@@ -10,7 +10,6 @@ exports.fetchLocation = async (locationId, next) => {
   }
 };
 
-// Location LIST
 exports.locationList = async (req, res, next) => {
   try {
     const location = await Location.findAll({
@@ -26,7 +25,6 @@ exports.locationList = async (req, res, next) => {
   }
 };
 
-// CREATE Location
 exports.locationCreate = async (req, res, next) => {
   try {
     const newLocation = await Location.create(req.body);

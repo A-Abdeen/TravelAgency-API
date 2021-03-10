@@ -10,19 +10,20 @@ exports.fetchFlight = async (flightId, next) => {
   }
 };
 
-//// Pass token -> req.user.id --> find airline through user ID --> create/get flight for airline??
-
-exports.flightList = async (req, res, next, user) => {
+exports.flightList = async (req, res, next) => {
   try {
+    const airline = await Airline.findOne({
+      where: { adminId: req.user.id },
+    });
+
     const flights = await Flight.findAll({
-      where: { airlineId: req.airline.id },
+      where: { airlineId: airline.id },
 
       attributes: { exclude: ["createdAt", "updatedAt"] },
       include: {
         model: Airline,
         as: "airline",
         attributes: { exclude: ["createdAt", "updatedAt"] },
-        where: { adminId: req.user.id },
       },
     });
     res.status(200).json(flights);
@@ -33,7 +34,11 @@ exports.flightList = async (req, res, next, user) => {
 
 exports.flightUpdate = async (req, res, next) => {
   try {
-    if (req.flight.id === req.airline.userId) {
+    const airline = await Airline.findOne({
+      where: { adminId: req.user.id },
+    });
+
+    if (airline.id === req.flight.airlineId) {
       {
         await req.flight.update(req.body);
         res.status(200).json(req.flight);

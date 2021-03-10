@@ -40,22 +40,21 @@ Object.keys(db).forEach((modelName) => {
   }
 });
 
-//Relations
-// MANY TO MANY
 db.Flight.belongsToMany(db.Booking, {
   through: "FlightBooking",
   foreignKey: { fieldName: "flightId" },
 });
+
 db.Booking.belongsToMany(db.Flight, {
   through: "FlightBooking",
   foreignKey: { fieldName: "bookingId" },
 });
 
-//ONE TO MANY (LOCATION - FLIGHT)
 db.Location.hasMany(db.Flight, {
   as: "originL",
   foreignKey: "originId",
 });
+
 db.Location.hasMany(db.Flight, {
   as: "destinationL",
   foreignKey: "destinationId",
@@ -70,20 +69,22 @@ db.Flight.belongsTo(db.Location, {
   as: "destinationF",
   foreignKey: "destinationId",
 });
-//////////////////////////////////////
+
 db.Airline.hasMany(db.Flight, {
   as: "flights",
   foreignKey: { fieldName: "airlineId" },
 });
+
 db.Flight.belongsTo(db.Airline, {
   as: "airline",
   foreignKey: "airlineId",
 });
-// ONE TO ONE
+
 db.User.hasOne(db.Airline, {
   foreignKey: "adminId",
   as: "airline",
 });
+
 db.Airline.belongsTo(db.User, { as: "admin" });
 
 db.sequelize = sequelize;

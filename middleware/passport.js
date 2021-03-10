@@ -14,8 +14,6 @@ exports.jwtStrategy = new JWTStrategy(
     if (Date.now() > jwtPayload.exp) {
       return done(null, false);
     }
-
-    //else do this
     try {
       const user = await User.findByPk(jwtPayload.id);
       return done(null, user); // if there is no user, this will throw a 401

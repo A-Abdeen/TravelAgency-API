@@ -12,7 +12,8 @@ exports.signup = async (req, res, next) => {
     const payload = {
       id: newUser.id,
       username: newUser.username,
-      exp: Date.now() + JWT_EXPIRATION_MS, /// in milli-seconds
+      userType: newUser.userType,
+      exp: Date.now() + JWT_EXPIRATION_MS,
     };
     const token = jwt.sign(JSON.stringify(payload), JWT_SECRET);
     res.status(201).json({ token });
@@ -26,9 +27,26 @@ exports.signin = (req, res) => {
   const payload = {
     id: user.id,
     username: user.username,
+    userType: user.userType,
     exp: Date.now() + JWT_EXPIRATION_MS,
-    // 900000 is 15 minutes
   };
   const token = jwt.sign(JSON.stringify(payload), JWT_SECRET);
   res.status(201).json({ token });
+};
+
+exports.userFetch = async (req, res, next) => {
+  try {
+    res.status(200).json(req.user);
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.userUpdate = async (req, res, next) => {
+  try {
+    await req.user.update(req.body);
+    res.status(200).json(req.user);
+  } catch (err) {
+    next(err);
+  }
 };

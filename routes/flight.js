@@ -3,7 +3,6 @@ const passport = require("passport");
 const controller = require("../controllers/flight");
 const router = express.Router();
 
-//-------------------FETCH/PARAM
 router.param("flightId", async (req, res, next, flightId) => {
   const flightFound = await controller.fetchFlight(flightId, next);
   if (flightFound) {
@@ -17,19 +16,13 @@ router.param("flightId", async (req, res, next, flightId) => {
   }
 });
 
-//-------------------LIST
-
-router.get("/", controller.flightList);
-
-//-------------------UPDATE
+router.get("/fetch", controller.flightList);
 
 router.put(
   "/:flightId",
   // passport.authenticate("jwt", { session: false }),
   controller.flightUpdate
 );
-
-//-------------------DELETE
 
 router.delete(
   "/:flightId",

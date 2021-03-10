@@ -1,7 +1,5 @@
 const { Flight, Airline } = require("../db/models");
 
-//-------------------FETCHING
-
 exports.fetchFlight = async (flightId, next) => {
   try {
     const flightFound = await Flight.findByPk(flightId);
@@ -12,16 +10,19 @@ exports.fetchFlight = async (flightId, next) => {
   }
 };
 
-//-------------------LIST
+//// Pass token -> req.user.id --> find airline through user ID --> create/get flight for airline??
 
-exports.flightList = async (req, res, next) => {
+exports.flightList = async (req, res, next, user) => {
   try {
     const flights = await Flight.findAll({
+      where: { airlineId: req.airline.id },
+
       attributes: { exclude: ["createdAt", "updatedAt"] },
       include: {
         model: Airline,
         as: "airline",
         attributes: { exclude: ["createdAt", "updatedAt"] },
+        where: { adminId: req.user.id },
       },
     });
     res.status(200).json(flights);
@@ -29,8 +30,6 @@ exports.flightList = async (req, res, next) => {
     next(err);
   }
 };
-
-//-------------------UPDATE
 
 exports.flightUpdate = async (req, res, next) => {
   try {
@@ -48,8 +47,6 @@ exports.flightUpdate = async (req, res, next) => {
     next(err);
   }
 };
-
-//-------------------DELETE
 
 exports.flightDelete = async (req, res, next) => {
   try {

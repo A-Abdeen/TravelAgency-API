@@ -16,11 +16,15 @@ router.param("flightId", async (req, res, next, flightId) => {
   }
 });
 
-router.get("/fetch", controller.flightList);
+router.get(
+  "/",
+  passport.authenticate("jwt", { session: false }),
+  controller.flightList
+);
 
 router.put(
   "/:flightId",
-  // passport.authenticate("jwt", { session: false }),
+  passport.authenticate("jwt", { session: false }),
   controller.flightUpdate
 );
 

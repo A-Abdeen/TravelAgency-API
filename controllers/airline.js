@@ -46,8 +46,33 @@ exports.flightAdd = async (req, res, next) => {
   try {
     if (req.user.id === req.airline.adminId) {
       req.body.airlineId = req.airline.id;
+      const duration = req.body.arrivalTime - req.body.departureTime;
 
-      const newFlight = await Flight.create(req.body);
+      const newFlight = await Flight.bulkCreate([
+        {
+          ...req.body,
+          departureTime: req.body.departureTime,
+          departureDate: req.body.departureDate, //do we have to add a condition
+          arrivalDate: req.body.arrivalDate,
+          arrivalTime: req.body.arrivalTime,
+          economySeats: req.body.economySeats,
+          economyPrice: req.body.economyPrice,
+          businessSeats: req.body.businessSeats,
+          businessPrice: req.body.businessPrice,
+        },
+        // {
+
+        //   ...req.body,
+        //   departureTime: req.body.arrivalTime,
+        //   departureDate: req.body.arrivalDate, //do we have to add a condition
+        //   arrivalDate: req.body.arrivalDate,
+        //   arrivalTime: req.body.arrivalTime + duration,
+        //   economySeats: req.body.economySeats,
+        //   economyPrice: req.body.economyPrice,
+        //   businessSeats: req.body.businessSeats,
+        //   businessPrice: req.body.businessPrice,
+        // },
+      ]);
       res.status(201).json(newFlight);
     } else {
       const err = new Error("Unauthorized");

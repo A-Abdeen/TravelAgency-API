@@ -26,7 +26,7 @@ router.post(
 
 router.post(
   "/:airlineId/flights",
-  // passport.authenticate("jwt", { session: false }),
+  passport.authenticate("jwt", { session: false }),
   controller.flightAdd
 );
 

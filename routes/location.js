@@ -16,8 +16,9 @@ router.param("locationId", async (req, res, next, locationId) => {
   }
 });
 
-router.get("/locations", controllers.locationList);
-
 router.post("/locations", controllers.locationCreate);
+
+router.get("/destinations", controllers.destinationList);
+router.get("/origins", controllers.originList);
 
 module.exports = router;

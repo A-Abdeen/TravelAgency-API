@@ -10,12 +10,27 @@ exports.fetchLocation = async (locationId, next) => {
   }
 };
 
-exports.locationList = async (req, res, next) => {
+exports.originList = async (req, res, next) => {
   try {
     const location = await Location.findAll({
       include: {
         model: Flight,
-        as: "fromLocation",
+        as: "originL",
+        attributes: ["id"],
+      },
+    });
+    res.json(location);
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.destinationList = async (req, res, next) => {
+  try {
+    const location = await Location.findAll({
+      include: {
+        model: Flight,
+        as: "destinationL",
         attributes: ["id"],
       },
     });

@@ -9,11 +9,11 @@ module.exports = (sequelize, DataTypes) => {
       // allowNull: false,
     },
     departureTime: {
-      type: DataTypes.TIME,
+      type: DataTypes.STRING, //use moment
       // allowNull: false,
     },
     arrivalTime: {
-      type: DataTypes.TIME,
+      type: DataTypes.STRING,
       // allowNull: false,
     },
     economySeats: {

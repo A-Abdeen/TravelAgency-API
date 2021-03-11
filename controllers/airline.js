@@ -48,18 +48,11 @@ exports.flightAdd = async (req, res, next) => {
       req.body.airlineId = req.airline.id;
       const duration = req.body.arrivalTime - req.body.departureTime;
 
-      const newFlight = await Flight.bulkCreate([
-        {
-          ...req.body,
-          departureTime: req.body.departureTime,
-          departureDate: req.body.departureDate, //do we have to add a condition
-          arrivalDate: req.body.arrivalDate,
-          arrivalTime: req.body.arrivalTime,
-          economySeats: req.body.economySeats,
-          economyPrice: req.body.economyPrice,
-          businessSeats: req.body.businessSeats,
-          businessPrice: req.body.businessPrice,
-        },
+      const newFlight = await Flight.create(req.body);
+      // .bulkCreate([
+      //   {
+      //     req.body,
+      //   },
         // {
 
         //   ...req.body,
@@ -72,7 +65,7 @@ exports.flightAdd = async (req, res, next) => {
         //   businessSeats: req.body.businessSeats,
         //   businessPrice: req.body.businessPrice,
         // },
-      ]);
+      // ]);
       res.status(201).json(newFlight);
     } else {
       const err = new Error("Unauthorized");

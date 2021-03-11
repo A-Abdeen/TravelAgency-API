@@ -15,7 +15,6 @@ exports.flightList = async (req, res, next) => {
     const airline = await Airline.findOne({
       where: { adminId: req.user.id },
     });
-
     const flights = await Flight.findAll({
       where: { airlineId: airline.id },
 

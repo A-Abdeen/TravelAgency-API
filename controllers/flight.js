@@ -1,4 +1,7 @@
-const { Flight, Airline } = require("../db/models");
+const { Flight, Airline, Location } = require("../db/models");
+const { Op } = require("sequelize");
+
+const moment = require("moment");
 
 exports.fetchFlight = async (flightId, next) => {
   try {
@@ -12,11 +15,11 @@ exports.fetchFlight = async (flightId, next) => {
 
 exports.flightList = async (req, res, next) => {
   try {
-    const airline = await Airline.findOne({
-      where: { adminId: req.user.id },
-    });
+    // const airline = await Airline.findOne({
+    //   where: { adminId: req.user.id },
+    // });
     const flights = await Flight.findAll({
-      where: { airlineId: airline.id },
+      // where: { airlineId: airline.id },
 
       attributes: { exclude: ["createdAt", "updatedAt"] },
       include: {
@@ -62,6 +65,28 @@ exports.flightDelete = async (req, res, next) => {
       err.status = 401;
       next(err);
     }
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.flightSearch = async (req, res, next) => {
+  try {
+    const time = moment();
+    const foundFlights = await Flight.findAll({
+      where: {
+        destinationId: req.body.destinationId,
+        //  originId: req.body.originId,
+
+        // economySeats: {
+        //   [Op.gte]: req.body.economySeats,
+        // },
+        // businessSeats: {
+        //   [Op.gte]: req.body.businessSeats,
+        // },
+      },
+    });
+    res.json(foundFlights);
   } catch (err) {
     next(err);
   }

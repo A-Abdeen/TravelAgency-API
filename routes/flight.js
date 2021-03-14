@@ -18,9 +18,11 @@ router.param("flightId", async (req, res, next, flightId) => {
 
 router.get(
   "/",
-  passport.authenticate("jwt", { session: false }),
+  // passport.authenticate("jwt", { session: false }),
   controller.flightList
 );
+
+router.get("/search", controller.flightSearch);
 
 router.put(
   "/:flightId",

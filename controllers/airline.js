@@ -53,18 +53,18 @@ exports.flightAdd = async (req, res, next) => {
       //   {
       //     req.body,
       //   },
-        // {
+      // {
 
-        //   ...req.body,
-        //   departureTime: req.body.arrivalTime,
-        //   departureDate: req.body.arrivalDate, //do we have to add a condition
-        //   arrivalDate: req.body.arrivalDate,
-        //   arrivalTime: req.body.arrivalTime + duration,
-        //   economySeats: req.body.economySeats,
-        //   economyPrice: req.body.economyPrice,
-        //   businessSeats: req.body.businessSeats,
-        //   businessPrice: req.body.businessPrice,
-        // },
+      //   ...req.body,
+      //   departureTime: req.body.arrivalTime,
+      //   departureDate: req.body.arrivalDate, //do we have to add a condition
+      //   arrivalDate: req.body.arrivalDate,
+      //   arrivalTime: req.body.arrivalTime + duration,
+      //   economySeats: req.body.economySeats,
+      //   economyPrice: req.body.economyPrice,
+      //   businessSeats: req.body.businessSeats,
+      //   businessPrice: req.body.businessPrice,
+      // },
       // ]);
       res.status(201).json(newFlight);
     } else {

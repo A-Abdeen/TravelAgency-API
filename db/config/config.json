@@ -1,8 +1,8 @@
 {
   "development": {
-    "username": "postgres",
-    "password": "0963",
-    "database": "travelagency_db",
+    "username": "ahmedabdeen",
+    "password": "",
+    "database": "rustshop_db",
     "host": "127.0.0.1",
     "dialect": "postgres",
     "logging": false

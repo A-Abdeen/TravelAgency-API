@@ -48,7 +48,16 @@ exports.userFetch = async (req, res, next) => {
 exports.userUpdate = async (req, res, next) => {
   try {
     await req.user.update(req.body);
-    res.status(200).json(req.user);
+    const payload = {
+      id: user.id,
+      username: user.username,
+      userType: user.userType,
+      email: user.email,
+
+      exp: Date.now() + JWT_EXPIRATION_MS,
+    };
+    const token = jwt.sign(JSON.stringify(payload), JWT_SECRET);
+    res.status(200).json(req.user, token);
   } catch (err) {
     next(err);
   }

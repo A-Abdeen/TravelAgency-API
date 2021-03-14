@@ -75,7 +75,10 @@ exports.flightSearch = async (req, res, next) => {
     const time = moment();
     const foundFlights = await Flight.findAll({
       where: {
-        destinationId: req.body.destinationId,
+        departureDate: req.body.departureDate,
+        // arrivalDate: req.body.arrivalDate,
+
+        // destinationId: req.body.destinationId,
         //  originId: req.body.originId,
 
         // economySeats: {
@@ -85,6 +88,14 @@ exports.flightSearch = async (req, res, next) => {
         //   [Op.gte]: req.body.businessSeats,
         // },
       },
+      attributes: {
+        exclude: ["createdAt", "updatedAt"],
+      },
+      include: [
+        { model: Airline, as: "airline", attributes: ["name"] },
+        // { model: Location, as: "destinationL", attributes: ["name"] },
+        // { model: Location, as: "originL", attributes: ["name"] },
+      ],
     });
     res.json(foundFlights);
   } catch (err) {

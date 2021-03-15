@@ -72,42 +72,35 @@ exports.flightDelete = async (req, res, next) => {
 
 exports.flightSearch = async (req, res, next) => {
   try {
+    const foundFlights = await Flight.findAll({
+      where: {
+        departureDate: req.body.departureDate,
+        arrivalDate: req.body.arrivalDate,
+        destinationId: req.body.destinationId,
+        originId: req.body.originId,
+      },
+
+      attributes: {
+        exclude: ["createdAt", "updatedAt"],
+      },
+      include: [
+        { model: Airline, as: "airline", attributes: ["name"] },
+        // { model: Location, as: "destinationL", attributes: ["name"] },
+        // { model: Location, as: "originL", attributes: ["name"] },
+      ],
+    });
     if (req.body.class === "economySeats") {
-      const economyClass = await Flight.findAll(
+      const economyClass = await foundFlights.filter(
         (flight) => flight.economySeats >= req.body.seats
       );
 
       res.json(economyClass);
     } else {
-      const businessClass = await Flight.findAll(
-        (flight) => (flight.businessSeats = req.body.seats)
+      const businessClass = await foundFlights.filter(
+        (flight) => flight.businessSeats >= req.body.seats
       );
       res.json(businessClass);
     }
-    // const foundFlights = await Flight.findAll({
-    //   // where: {
-    //   //   departureDate: req.body.departureDate,
-    //   // },
-    //   // arrivalDate: req.body.arrivalDate,
-    //   // destinationId: req.body.destinationId,
-    //   // originId: req.body.originId,
-    //   //   economySeats: {
-    //   //     [Op.gte]: req.body.economySeats ?? 0,
-    //   //   },
-    //   //   businessSeats: {
-    //   //     [Op.gte]: req.body.businessSeats ?? 0,
-    //   //   },
-    //   // },
-    //   // attributes: {
-    //   //   exclude: ["createdAt", "updatedAt"],
-    //   // },
-    //   // include: [
-    //   //   { model: Airline, as: "airline", attributes: ["name"] },
-    //   //   // { model: Location, as: "destinationL", attributes: ["name"] },
-    //   //   // { model: Location, as: "originL", attributes: ["name"] },
-    //   // ],
-    // });
-    // res.json(foundFlights);
   } catch (err) {
     next(err);
   }

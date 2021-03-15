@@ -22,7 +22,7 @@ router.get(
   controller.flightList
 );
 
-router.get("/search", controller.flightSearch);
+router.post("/search", controller.flightSearch);
 
 router.put(
   "/:flightId",

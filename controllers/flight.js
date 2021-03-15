@@ -71,6 +71,9 @@ exports.flightDelete = async (req, res, next) => {
 };
 
 exports.flightSearch = async (req, res, next) => {
+  
+  const {body} = req;
+  console.log("!!!!!!!!!!!!!!",body);
   try {
     const foundFlights = await Flight.findAll({
       where: {
@@ -93,14 +96,20 @@ exports.flightSearch = async (req, res, next) => {
       const economyClass = await foundFlights.filter(
         (flight) => flight.economySeats >= req.body.seats
       );
-
+      // console.log(economyClass);
       res.json(economyClass);
+
     } else {
       const businessClass = await foundFlights.filter(
         (flight) => flight.businessSeats >= req.body.seats
       );
+      // console.log(businessClass);
       res.json(businessClass);
+      
+      
     }
+    
+    
   } catch (err) {
     next(err);
   }

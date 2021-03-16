@@ -30,8 +30,4 @@ router.post(
   controller.flightAdd
 );
 
-router.put("/:airlineId", controller.airlineUpdate);
-
-router.delete("/:airlineId", controller.airlineDelete);
-
 module.exports = router;

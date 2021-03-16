@@ -3,6 +3,10 @@ const { User } = require("../db/models");
 const jwt = require("jsonwebtoken");
 const { JWT_SECRET, JWT_EXPIRATION_MS } = require("../config/keys");
 
+// Almost redundent code in payloads; A* different variable name, and B* one of three with less attribute.
+// Is it worth combining?
+
+// *A
 exports.signup = async (req, res, next) => {
   try {
     const saltRounds = 10;
@@ -45,6 +49,7 @@ exports.userFetch = async (req, res, next) => {
   }
 };
 
+// *B
 exports.userUpdate = async (req, res, next) => {
   try {
     const user = req.user;

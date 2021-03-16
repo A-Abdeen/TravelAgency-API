@@ -16,7 +16,7 @@ router.param("bookingId", async (req, res, next, bookingId) => {
   }
 });
 
-router.post("/bookingCreate", controllers.BookingCreate);
+router.post("/bookingCreate", controllers.bookingCreate);
 
 router.get("/booking", controllers.bookingList);
 

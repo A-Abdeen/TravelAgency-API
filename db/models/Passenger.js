@@ -1,3 +1,5 @@
+//allowNull set to false for testing purposes
+// add allowNull where appropriate only after testing
 module.exports = (sequelize, DataTypes) => {
   const Passenger = sequelize.define("Passenger", {
     email: {

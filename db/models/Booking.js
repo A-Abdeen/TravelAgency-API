@@ -1,3 +1,5 @@
+//allowNull set to false for testing purposes
+
 module.exports = (sequelize, DataTypes) => {
   const Booking = sequelize.define("Booking", {
     fullName: {

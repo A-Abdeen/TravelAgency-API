@@ -11,27 +11,30 @@ exports.fetchBooking = async (bookingId, next) => {
 };
 
 exports.BookingCreate = async (req, res, next) => {
-  try {
-    const newBooking = await Booking.create({ userId: req.user.id });
-    const cart = req.body.flights.map((item) => ({
-      ...item,
-      bookingId: newBooking.id,
-    }));
-    const passengers = req.body.passengers.map((passenger) => ({
-      ...passenger,
-      bookingId: newBooking.id,
-    }));
-    await BookingItem.bulkCreate(cart);
-    await Passenger.bulkCreate(passengers);
-    res.status(201).end();
-  } catch (error) {
-    next(error);
-  }
+  const pj = req.body.passenger.map((item) => ({
+    ...item,
+  }));
+  const newBooking = await Booking.bulkCreate(pj);
+
+  const booking = req.body.flightIds.map((item) => ({
+    ...item,
+    bookingId: newBooking.id,
+  }));
+  const newFlightBooking = FlightBooking.bulkCreate(booking);
+
+  res.status(201).json(newBooking);
 };
 
 exports.bookingList = async (req, res, next) => {
   try {
-    const booking = await Booking.findAll();
+    const booking = await Booking.findAll({
+      attributes: { exclude: ["createdAt", "updatedAt"] },
+      include: {
+        model: Flight,
+        as: "flight",
+        attributes: { exclude: ["createdAt", "updatedAt"] },
+      },
+    });
     res.json(booking);
   } catch (error) {
     next(error);

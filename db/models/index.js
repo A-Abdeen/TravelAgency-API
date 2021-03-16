@@ -90,8 +90,6 @@ db.User.hasOne(db.Airline, {
 
 db.Airline.belongsTo(db.User, { as: "admin" });
 
-db.Booking.hasMany(db.Passenger, { foreignKey: "bookingId", as: "passengers" });
-db.Passenger.belongsTo(db.Booking, { foreignKey: "bookingId", as: "booking" });
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 

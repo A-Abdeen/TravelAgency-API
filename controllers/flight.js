@@ -1,4 +1,4 @@
-const { Flight, Airline, Location } = require("../db/models");
+const { Flight, Airline, Location, Booking } = require("../db/models");
 const { Op } = require("sequelize");
 
 const moment = require("moment");
@@ -22,11 +22,18 @@ exports.flightList = async (req, res, next) => {
       // where: { airlineId: airline.id },
 
       attributes: { exclude: ["createdAt", "updatedAt"] },
-      include: {
-        model: Airline,
-        as: "airline",
-        attributes: { exclude: ["createdAt", "updatedAt"] },
-      },
+      include: [
+        {
+          model: Airline,
+          as: "airline",
+          attributes: { exclude: ["createdAt", "updatedAt"] },
+        },
+        {
+          model: Booking,
+          as: "booking",
+          attributes: { exclude: ["createdAt", "updatedAt"] },
+        },
+      ],
     });
     res.status(200).json(flights);
   } catch (err) {

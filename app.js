@@ -8,7 +8,6 @@ const locationRoutes = require("./routes/location");
 const { localStrategy, jwtStrategy } = require("./middleware/passport");
 
 const cors = require("cors");
-const path = require("path");
 
 const passport = require("passport");
 

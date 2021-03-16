@@ -4,6 +4,7 @@ const userRoutes = require("./routes/user");
 const airlineRoutes = require("./routes/airline");
 const flightRoutes = require("./routes/flight");
 const locationRoutes = require("./routes/location");
+const bookingRoutes = require("./routes/booking");
 
 const { localStrategy, jwtStrategy } = require("./middleware/passport");
 
@@ -23,6 +24,7 @@ app.use(userRoutes);
 app.use("/airlines", airlineRoutes);
 app.use("/flights", flightRoutes);
 app.use("/", locationRoutes);
+app.use("/", bookingRoutes);
 
 db.sequelize.sync({ alter: true });
 

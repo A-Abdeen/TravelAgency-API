@@ -39,9 +39,11 @@ Object.keys(db).forEach((modelName) => {
     db[modelName].associate(db);
   }
 });
-db.User.hasMany(db.Booking, { as: "booking", foreignKey: "userId" });
-
-db.Booking.belongsTo(db.User, { as: "user" });
+db.Booking.hasMany(db.Passenger, { as: "passengers", foreignKey: "bookingId" });
+db.Passenger.belongsTo(db.Booking, { as: "booking" });
+//we will come back later
+// db.User.hasMany(db.Booking, { as: "booking" });
+// db.Booking.belongsTo(db.User, { as: "user" });
 
 db.Flight.belongsToMany(db.Booking, {
   through: db.FlightBooking,

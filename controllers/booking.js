@@ -11,17 +11,20 @@ exports.fetchBooking = async (bookingId, next) => {
 };
 
 exports.BookingCreate = async (req, res, next) => {
-  const pj = req.body.passenger.map((item) => ({
-    ...item,
-  }));
-  const newBooking = await Booking.bulkCreate(pj);
+  const newBooking = await Booking.create(req.body);
 
   const booking = req.body.flightIds.map((item) => ({
     ...item,
     bookingId: newBooking.id,
   }));
   const newFlightBooking = FlightBooking.bulkCreate(booking);
-
+  const newPassenger = req.body.passengers.map((item) => ({
+    ...item,
+    bookingId: newBooking.id,
+  }));
+  console.log(newPassenger);
+  const newPassengerBooking = Passenger.bulkCreate(newPassenger);
+  console.log(newPassengerBooking);
   res.status(201).json(newBooking);
 };
 

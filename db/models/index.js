@@ -39,14 +39,17 @@ Object.keys(db).forEach((modelName) => {
     db[modelName].associate(db);
   }
 });
+db.User.hasMany(db.Booking, { as: "booking", foreignKey: "userId" });
+
+db.Booking.belongsTo(db.User, { as: "user" });
 
 db.Flight.belongsToMany(db.Booking, {
-  through: "FlightBooking",
+  through: db.FlightBooking,
   foreignKey: { fieldName: "flightId" },
 });
 
 db.Booking.belongsToMany(db.Flight, {
-  through: "FlightBooking",
+  through: db.FlightBooking,
   foreignKey: { fieldName: "bookingId" },
 });
 
@@ -87,6 +90,8 @@ db.User.hasOne(db.Airline, {
 
 db.Airline.belongsTo(db.User, { as: "admin" });
 
+db.Booking.hasMany(db.Passenger, { foreignKey: "bookingId", as: "passengers" });
+db.Passenger.belongsTo(db.Booking, { foreignKey: "bookingId", as: "booking" });
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 

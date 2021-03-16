@@ -1,4 +1,6 @@
 const { Airline, Flight, User } = require("../db/models");
+const moment = require("moment");
+const { duration } = require("moment");
 
 exports.fetchAirline = async (airlineId, next) => {
   try {
@@ -46,26 +48,56 @@ exports.flightAdd = async (req, res, next) => {
   try {
     if (req.user.id === req.airline.adminId) {
       req.body.airlineId = req.airline.id;
-      const duration = req.body.arrivalTime - req.body.departureTime;
 
-      const newFlight = await Flight.create(req.body);
-      // .bulkCreate([
-      //   {
-      //     req.body,
-      //   },
-      // {
+      const dT = req.body.departureTime; //String 16:00
+      const dD = req.body.departureDate; //String 2021-03-17
 
-      //   ...req.body,
-      //   departureTime: req.body.arrivalTime,
-      //   departureDate: req.body.arrivalDate, //do we have to add a condition
-      //   arrivalDate: req.body.arrivalDate,
-      //   arrivalTime: req.body.arrivalTime + duration,
-      //   economySeats: req.body.economySeats,
-      //   economyPrice: req.body.economyPrice,
-      //   businessSeats: req.body.businessSeats,
-      //   businessPrice: req.body.businessPrice,
-      // },
-      // ]);
+      const dDateTime = moment(dD + " " + dT, "YYYY-MM-DD HH:mm"); // Concatenation
+
+      const aT = req.body.arrivalTime; //String 18:00
+      const aD = req.body.arrivalDate; //String 2021-03-17
+
+      const aDateTime = moment(aD + " " + aT, "YYYY-MM-DD HH:mm");
+
+      const flightDuration = moment.duration(aDateTime.diff(dDateTime)); // Calculate duration
+
+      const a2 = moment(aDateTime).add(flightDuration.as("minutes"), "minutes");
+      // Add 30m to arrival -> Departure 2
+      const d2 = moment(aDateTime).add(30, "minutes");
+      // Add duration to Departure 2 -> Arrival 2
+
+      // Split D2 for date and time
+
+      // Split A2 for date and time
+
+      console.log("############################################", a2);
+
+      const newFlight = await Flight.bulkCreate([
+        {
+          ...req.body,
+          departureTime: req.body.departureTime,
+          departureDate: req.body.departureDate,
+          arrivalDate: req.body.arrivalDate,
+          arrivalTime: req.body.arrivalTime,
+          economySeats: req.body.economySeats,
+          economyPrice: req.body.economyPrice,
+          businessSeats: req.body.businessSeats,
+          businessPrice: req.body.businessPrice,
+        },
+        {
+          economySeats: req.body.economySeats,
+          economyPrice: req.body.economyPrice,
+          businessSeats: req.body.businessSeats,
+          businessPrice: req.body.businessPrice,
+          departureTime: req.body.arrivalTime, // +30m from arrival
+          departureDate: req.body.arrivalDate, // DATE calculated as part of departure time
+          arrivalTime: req.body.arrivalTime, // Arrival +30m + duration
+          arrivalDate: req.body.arrivalDate, // DATE calculated as part of arrival time
+          originId: req.body.destinationId,
+          destinationId: req.body.originId,
+          airlineId: req.body.airlineId,
+        },
+      ]);
       res.status(201).json(newFlight);
     } else {
       const err = new Error("Unauthorized");

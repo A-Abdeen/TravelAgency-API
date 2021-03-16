@@ -71,16 +71,24 @@ exports.flightDelete = async (req, res, next) => {
 };
 
 exports.flightSearch = async (req, res, next) => {
-  
-  const {body} = req;
-  console.log("!!!!!!!!!!!!!!",body);
+  console.log("!!!!!!!!!!!!!!!REQUEST BODY!!!!!!!!!!!!!!!!!!", req.body);
   try {
     const foundFlights = await Flight.findAll({
       where: {
-        departureDate: req.body.departureDate,
-        arrivalDate: req.body.arrivalDate,
-        destinationId: req.body.destinationId,
-        originId: req.body.originId,
+        [Op.and]: [
+          {
+            departureDate: req.body.departureDate,
+          },
+          {
+            arrivalDate: req.body.arrivalDate,
+          },
+          {
+            destinationId: req.body.destinationId,
+          },
+          {
+            originId: req.body.originId,
+          },
+        ],
       },
 
       attributes: {
@@ -92,24 +100,30 @@ exports.flightSearch = async (req, res, next) => {
         // { model: Location, as: "originL", attributes: ["name"] },
       ],
     });
+    console.log(
+      "???????????????? FOUND FLIGHTS ?????????????????",
+      foundFlights
+    );
+
     if (req.body.class === "economySeats") {
       const economyClass = await foundFlights.filter(
         (flight) => flight.economySeats >= req.body.seats
       );
-      // console.log(economyClass);
+      console.log(
+        "&&&&&&&&&&&&&&&&&&&&& ECONOMY CLASS &&&&&&&&&&&&&&&&&&&&&&&&",
+        economyClass
+      );
       res.json(economyClass);
-
     } else {
       const businessClass = await foundFlights.filter(
         (flight) => flight.businessSeats >= req.body.seats
       );
-      // console.log(businessClass);
+      console.log(
+        "$$$$$$$$$$$$$$$ BU$INE$$ CLA$$ $$$$$$$$$$$$$$$$",
+        businessClass
+      );
       res.json(businessClass);
-      
-      
     }
-    
-    
   } catch (err) {
     next(err);
   }

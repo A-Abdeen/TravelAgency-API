@@ -78,7 +78,6 @@ exports.flightDelete = async (req, res, next) => {
 };
 
 exports.flightSearch = async (req, res, next) => {
-  console.log("!!!!!!!!!!!!!!!REQUEST BODY!!!!!!!!!!!!!!!!!!", req.body);
   try {
     const foundFlights = await Flight.findAll({
       where: {

@@ -5,17 +5,14 @@ module.exports = (sequelize, DataTypes) => {
     fullName: {
       type: DataTypes.STRING,
       // allowNull: false,
-      unique: {
-        args: true,
-        msg: "Username taken",
-      },
+    },
       email: {
         type: DataTypes.STRING,
         // allowNull: false,
-        unique: {
-          args: true,
-          msg: "Email address already used",
-        },
+        // unique: {
+        //   args: true,
+        //   msg: "Email address already used",
+        // },
         validate: {
           isEmail: {
             args: true,
@@ -28,11 +25,11 @@ module.exports = (sequelize, DataTypes) => {
         //allowNull: false,
       },
       phone: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING,
         // allowNull: false,
       },
-    },
-  });
+  },
+    );
 
   return Booking;
 };

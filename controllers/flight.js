@@ -1,11 +1,10 @@
 const { Flight, Airline, Location, Booking } = require("../db/models");
 const { Op } = require("sequelize");
 
-const moment = require("moment");
-
 exports.fetchFlight = async (flightId, next) => {
   try {
     const flightFound = await Flight.findByPk(flightId);
+
     if (flightFound) return flightFound;
     else next({ message: "No Flight Found" });
   } catch (error) {
@@ -15,12 +14,7 @@ exports.fetchFlight = async (flightId, next) => {
 
 exports.flightList = async (req, res, next) => {
   try {
-    // const airline = await Airline.findOne({
-    //   where: { adminId: req.user.id },
-    // });
     const flights = await Flight.findAll({
-      // where: { airlineId: airline.id },
-
       attributes: { exclude: ["createdAt", "updatedAt"] },
       include: [
         {
@@ -62,21 +56,6 @@ exports.flightUpdate = async (req, res, next) => {
   }
 };
 
-exports.flightDelete = async (req, res, next) => {
-  try {
-    if (req.user.id === req.airline.userId) {
-      await req.flight.destroy();
-      res.status(204).end();
-    } else {
-      const err = new Error("Unauthorized");
-      err.status = 401;
-      next(err);
-    }
-  } catch (err) {
-    next(err);
-  }
-};
-
 exports.flightSearch = async (req, res, next) => {
   try {
     const foundFlights = await Flight.findAll({
@@ -102,31 +81,20 @@ exports.flightSearch = async (req, res, next) => {
       },
       include: [
         { model: Airline, as: "airline", attributes: ["name"] },
+        // Review location display in Web flight search list
         // { model: Location, as: "destinationL", attributes: ["name"] },
         // { model: Location, as: "originL", attributes: ["name"] },
       ],
     });
-    console.log(
-      "???????????????? FOUND FLIGHTS ?????????????????",
-      foundFlights
-    );
 
     if (req.body.class === "economySeats") {
       const economyClass = await foundFlights.filter(
         (flight) => flight.economySeats >= req.body.seats
       );
-      console.log(
-        "&&&&&&&&&&&&&&&&&&&&& ECONOMY CLASS &&&&&&&&&&&&&&&&&&&&&&&&",
-        economyClass
-      );
       res.json(economyClass);
     } else {
       const businessClass = await foundFlights.filter(
         (flight) => flight.businessSeats >= req.body.seats
-      );
-      console.log(
-        "$$$$$$$$$$$$$$$ BU$INE$$ CLA$$ $$$$$$$$$$$$$$$$",
-        businessClass
       );
       res.json(businessClass);
     }

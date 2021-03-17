@@ -4,7 +4,7 @@ const controllers = require("../controllers/location");
 const router = express.Router();
 
 router.param("locationId", async (req, res, next, locationId) => {
-  const foundLocation = await controllers.fetchAirline(locationId, next);
+  const foundLocation = await controllers.fetchLocation(locationId, next);
   if (foundLocation) {
     req.airline = foundLocation;
     next();

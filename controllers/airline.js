@@ -44,6 +44,7 @@ exports.airlineAdd = async (req, res, next) => {
   }
 };
 
+//  WIP
 exports.flightAdd = async (req, res, next) => {
   try {
     if (req.user.id === req.airline.adminId) {
@@ -104,26 +105,6 @@ exports.flightAdd = async (req, res, next) => {
       err.status = 401;
       next(err);
     }
-  } catch (err) {
-    next(err);
-  }
-};
-
-exports.airlineUpdate = async (req, res, next) => {
-  try {
-    if (req.user.id === req.airline.adminId) {
-      await req.airline.update(req.body);
-      res.status(200).json(req.airline);
-    }
-  } catch (err) {
-    next(err);
-  }
-};
-
-exports.airlineDelete = async (req, res, next) => {
-  try {
-    if (req.user.id === req.airline.adminId) await req.airline.destroy();
-    res.status(204).end();
   } catch (err) {
     next(err);
   }

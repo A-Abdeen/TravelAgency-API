@@ -1,6 +1,5 @@
 const { Location, Flight } = require("../db/models");
 
-// FETCH AIRLINE
 exports.fetchLocation = async (locationId, next) => {
   try {
     const foundLocation = await Location.findByPk(locationId);

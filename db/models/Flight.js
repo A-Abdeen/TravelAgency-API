@@ -1,3 +1,5 @@
+//allowNull set to false for testing purposes
+
 module.exports = (sequelize, DataTypes) => {
   const Flight = sequelize.define("Flight", {
     departureDate: {
@@ -9,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
       // allowNull: false,
     },
     departureTime: {
-      type: DataTypes.STRING, //use moment
+      type: DataTypes.STRING,
       // allowNull: false,
     },
     arrivalTime: {

@@ -1,3 +1,5 @@
+// Removed authentication for testing purposes
+
 const express = require("express");
 const passport = require("passport");
 const controller = require("../controllers/flight");
@@ -28,12 +30,6 @@ router.put(
   "/:flightId",
   passport.authenticate("jwt", { session: false }),
   controller.flightUpdate
-);
-
-router.delete(
-  "/:flightId",
-  // passport.authenticate("jwt", { session: false }),
-  controller.flightDelete
 );
 
 module.exports = router;

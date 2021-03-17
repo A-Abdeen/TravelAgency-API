@@ -1,6 +1,5 @@
 const { Flight, Booking, Passenger, FlightBooking } = require("../db/models");
 
-// FETCH AIRLINE
 exports.fetchBooking = async (bookingId, next) => {
   try {
     const foundBooking = await Booking.findByPk(bookingId);
@@ -47,4 +46,24 @@ exports.bookingList = async (req, res, next) => {
   } catch (error) {
     next(error);
   }
+};
+// After finalizing WEB booking, will add userId for booking
+exports.bookingCreate = async (req, res, next) => {
+  const newBooking = await Booking.create(req.body);
+
+  const booking = req.body.flightIds.map((item) => ({
+    ...item,
+    bookingId: newBooking.id,
+  }));
+
+  const newFlightBooking = FlightBooking.bulkCreate(booking);
+
+  const newPassenger = req.body.passengers.map((item) => ({
+    ...item,
+    bookingId: newBooking.id,
+  }));
+
+  const newPassengerBooking = Passenger.bulkCreate(newPassenger);
+
+  res.status(201).json(newBooking);
 };

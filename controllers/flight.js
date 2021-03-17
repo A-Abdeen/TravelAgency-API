@@ -24,7 +24,7 @@ exports.flightList = async (req, res, next) => {
         },
         {
           model: Booking,
-          as: "booking",
+          as: "bookings",
           attributes: { exclude: ["createdAt", "updatedAt"] },
         },
       ],
@@ -58,6 +58,10 @@ exports.flightUpdate = async (req, res, next) => {
 
 exports.flightSearch = async (req, res, next) => {
   try {
+    console.log(
+      "######################### REQ.BODY ##################################",
+      req.body
+    );
     const foundFlights = await Flight.findAll({
       where: {
         [Op.and]: [
@@ -86,10 +90,17 @@ exports.flightSearch = async (req, res, next) => {
         // { model: Location, as: "originL", attributes: ["name"] },
       ],
     });
-
+    console.log(
+      "###################### FOUND FLIGHTS #####################################",
+      foundFlights
+    );
     if (req.body.class === "economySeats") {
       const economyClass = await foundFlights.filter(
         (flight) => flight.economySeats >= req.body.seats
+      );
+      console.log(
+        "######################### ECONOMY CLASS (RES)##################################",
+        economyClass
       );
       res.json(economyClass);
     } else {

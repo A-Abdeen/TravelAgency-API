@@ -62,34 +62,79 @@ exports.flightSearch = async (req, res, next) => {
       "######################### REQ.BODY ##################################",
       req.body
     );
-    const foundFlights = await Flight.findAll({
-      where: {
-        [Op.and]: [
-          {
-            departureDate: req.body.departureDate,
-          },
-          {
-            arrivalDate: req.body.arrivalDate,
-          },
-          {
-            destinationId: req.body.destinationId,
-          },
-          {
-            originId: req.body.originId,
-          },
-        ],
-      },
+    let foundFlights;
 
-      attributes: {
-        exclude: ["createdAt", "updatedAt"],
-      },
-      include: [
-        { model: Airline, as: "airline", attributes: ["name"] },
-        // Review location display in Web flight search list
-        // { model: Location, as: "destinationL", attributes: ["name"] },
-        // { model: Location, as: "originL", attributes: ["name"] },
-      ],
-    });
+    if (req.body.trip === "oneway") {
+      foundFlights = await Flight.findAll({
+        where: {
+          [Op.and]: [
+            {
+              departureDate: req.body.departureDate,
+            },
+            {
+              destinationId: req.body.destinationId,
+            },
+            {
+              originId: req.body.originId,
+            },
+          ],
+        },
+
+        attributes: {
+          exclude: ["createdAt", "updatedAt"],
+        },
+        include: [
+          { model: Airline, as: "airline", attributes: ["name"] },
+          // Review location display in Web flight search list
+          // { model: Location, as: "destinationL", attributes: ["name"] },
+          // { model: Location, as: "originL", attributes: ["name"] },
+        ],
+      });
+    } else {
+      foundFlights = await Flight.findAll({
+        where: {
+          [Op.or]: [
+            {
+              [Op.and]: [
+                {
+                  departureDate: req.body.departureDate,
+                },
+                {
+                  destinationId: req.body.destinationId,
+                },
+                {
+                  originId: req.body.originId,
+                },
+              ],
+            },
+            {
+              [Op.and]: [
+                {
+                  arrivalDate: req.body.arrivalDate,
+                },
+                {
+                  destinationId: req.body.originId,
+                },
+                {
+                  originId: req.body.destinationId,
+                },
+              ],
+            },
+          ],
+        },
+
+        attributes: {
+          exclude: ["createdAt", "updatedAt"],
+        },
+        include: [
+          { model: Airline, as: "airline", attributes: ["name"] },
+          // Review location display in Web flight search list
+          // { model: Location, as: "destinationL", attributes: ["name"] },
+          // { model: Location, as: "originL", attributes: ["name"] },
+        ],
+      });
+    }
+
     console.log(
       "###################### FOUND FLIGHTS #####################################",
       foundFlights

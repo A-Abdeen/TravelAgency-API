@@ -62,11 +62,10 @@ exports.flightAdd = async (req, res, next) => {
 
       const flightDuration = moment.duration(aDateTime.diff(dDateTime)); // Calculate duration
 
-      const a2 = moment(aDateTime).add(flightDuration.as("minutes"), "minutes");
       // Add 30m to arrival -> Departure 2
       const d2 = moment(aDateTime).add(30, "minutes");
       // Add duration to Departure 2 -> Arrival 2
-
+      const a2 = moment(d2).add(flightDuration.as("minutes"), "minutes");
       // Split D2 for date and time
 
       // Split A2 for date and time
